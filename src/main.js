@@ -31,6 +31,7 @@ function onSubmit(event) {
 }
 
 function getSearch() {
+  refs.list.innerHTML = '';
   const ApiKey = '43688767-8e78f2c96043da1155d4d6687';
   const searchParams = new URLSearchParams({
     key: ApiKey,
@@ -49,7 +50,6 @@ function getSearch() {
     })
     .then(data => {
       if (!data.hits.length) {
-        refs.list.innerHTML = createMarkup(data.hits);
         iziToast.error({
           ...iziOptions,
           message: `Sorry, there are no images matching your search query. Please try again!`,
