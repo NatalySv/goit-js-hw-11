@@ -49,6 +49,7 @@ function getSearch() {
     })
     .then(data => {
       if (!data.hits.length) {
+        refs.list.innerHTML = createMarkup(data.hits);
         iziToast.error({
           ...iziOptions,
           message: `Sorry, there are no images matching your search query. Please try again!`,
