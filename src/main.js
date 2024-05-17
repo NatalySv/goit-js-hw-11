@@ -63,6 +63,7 @@ function getSearch() {
         return;
       }
       refs.list.innerHTML = createMarkup(data.hits);
+      lightbox.refresh();
     })
     .catch(error => console.log('catch', error));
 }
@@ -80,20 +81,21 @@ function createMarkup(arr) {
         downloads,
         views,
       }) =>
-        `<li id="${id}" class="gallery-item">
+        `<li class="gallery-item" id="${id}">
             <a class="gallery-link" href="${largeImageURL}">
                 <img
                     class="gallery-image"
                     src="${webformatURL}"
                     alt="${tags}"
-                    />
+                    />               
             </a>
             <ul class="gallery-stat-list">
-                <li class="stat-item"><h2 class="title">Likes</h2><p class="stat-data">${likes}</p></li>
-                <li class="stat-item"><h2 class="title">Views</h2><p class="stat-data">${views}</p></li>
-                <li class="stat-item"><h2 class="title">Comments</h2><p class="stat-data">${comments}</p></li>
-                <li class="stat-item"><h2 class="title">Downloads</h2><p class="stat-data">${downloads}</p></li>
+                    <li class="stat-item"><h2 class="title">Likes</h2><p class="stat-data">${likes}</p></li>
+                    <li class="stat-item"><h2 class="title">Views</h2><p class="stat-data">${views}</p></li>
+                    <li class="stat-item"><h2 class="title">Comments</h2><p class="stat-data">${comments}</p></li>
+                    <li class="stat-item"><h2 class="title">Downloads</h2><p class="stat-data">${downloads}</p></li>
             </ul>
+            
         </li>`
     )
     .join('');
@@ -108,3 +110,8 @@ const iziOptions = {
   messageSize: '16',
   position: 'topRight',
 };
+
+const lightbox = new SimpleLightbox('.gallery-item a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
