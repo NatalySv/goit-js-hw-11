@@ -5,20 +5,24 @@ import iconError from './img/icon-error.svg';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const refs = {
+import { getSearch } from './js/pixabay-api';
+import { createMarkup } from './js/render-functions';
+
+export const refs = {
   form: document.querySelector('.task-form'),
   input: document.querySelector('.form-input'),
   list: document.querySelector('.gallery'),
 };
 
-let querySearch = null;
+export let querySearch = null;
 
 refs.form.addEventListener('submit', onSubmit);
 
 function onSubmit(event) {
   event.preventDefault();
-  console.log(`input before: `, querySearch);
-  if (!refs.input.value) {
+  const inputValue = refs.input.value;
+
+  if (!inputValue) {
     refs.list.innerHTML = '';
     iziToast.error({
       ...iziOptions,
@@ -28,31 +32,10 @@ function onSubmit(event) {
     });
     return;
   }
-  querySearch = refs.input.value;
-  console.log(`input after: `, querySearch);
-  getSearch();
 
-  refs.form.reset();
-}
-
-function getSearch() {
+  querySearch = inputValue;
   refs.list.innerHTML = `<span class="loader"></span>`;
-  const ApiKey = '43688767-8e78f2c96043da1155d4d6687';
-  const searchParams = new URLSearchParams({
-    key: ApiKey,
-    q: querySearch,
-    image_type: 'photo',
-    orientation: 'horizontal',
-    safesearch: true,
-  });
-  console.log(`searchParams: ${searchParams.toString()}`);
-  return fetch(`https://pixabay.com/api/?${searchParams}`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(response.status);
-      }
-      return response.json();
-    })
+  getSearch()
     .then(data => {
       if (!data.hits.length) {
         refs.list.innerHTML = '';
@@ -68,39 +51,7 @@ function getSearch() {
       lightbox.refresh();
     })
     .catch(error => console.log('catch', error));
-}
-
-function createMarkup(arr) {
-  return arr
-    .map(
-      ({
-        id,
-        tags,
-        largeImageURL,
-        webformatURL,
-        comments,
-        likes,
-        downloads,
-        views,
-      }) =>
-        `<li class="gallery-item" id="${id}">
-            <a class="gallery-link" href="${largeImageURL}">
-                <img
-                    class="gallery-image"
-                    src="${webformatURL}"
-                    alt="${tags}"
-                    />               
-            </a>
-            <ul class="gallery-stat-list">
-                    <li class="stat-item"><h2 class="title">Likes</h2><p class="stat-data">${likes}</p></li>
-                    <li class="stat-item"><h2 class="title">Views</h2><p class="stat-data">${views}</p></li>
-                    <li class="stat-item"><h2 class="title">Comments</h2><p class="stat-data">${comments}</p></li>
-                    <li class="stat-item"><h2 class="title">Downloads</h2><p class="stat-data">${downloads}</p></li>
-            </ul>
-            
-        </li>`
-    )
-    .join('');
+  refs.form.reset();
 }
 
 const iziOptions = {
