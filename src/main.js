@@ -2,6 +2,9 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import iconError from './img/icon-error.svg';
 
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
 const refs = {
   form: document.querySelector('.task-form'),
   input: document.querySelector('.form-input'),
@@ -27,6 +30,7 @@ function onSubmit(event) {
   querySearch = refs.input.value;
   console.log(`input after: `, querySearch);
   getSearch();
+
   refs.form.reset();
 }
 
