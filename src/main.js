@@ -19,6 +19,7 @@ function onSubmit(event) {
   event.preventDefault();
   console.log(`input before: `, querySearch);
   if (!refs.input.value) {
+    refs.list.innerHTML = '';
     iziToast.error({
       ...iziOptions,
       message: `Please enter your search query, the field cannot be blank!`,
@@ -35,7 +36,7 @@ function onSubmit(event) {
 }
 
 function getSearch() {
-  refs.list.innerHTML = '';
+  refs.list.innerHTML = `<span class="loader"></span>`;
   const ApiKey = '43688767-8e78f2c96043da1155d4d6687';
   const searchParams = new URLSearchParams({
     key: ApiKey,
@@ -54,6 +55,7 @@ function getSearch() {
     })
     .then(data => {
       if (!data.hits.length) {
+        refs.list.innerHTML = '';
         iziToast.error({
           ...iziOptions,
           message: `Sorry, there are no images matching your search query. Please try again!`,
